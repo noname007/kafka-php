@@ -6,6 +6,7 @@ namespace KafkaTest\Functional;
 use Kafka\Consumer;
 use Kafka\Consumer\StopStrategy\Callback;
 use Kafka\ConsumerConfig;
+use Kafka\Exception;
 use Kafka\ProducerConfig;
 use Kafka\Protocol\Protocol;
 use PHPUnit\Framework\TestCase;
@@ -103,6 +104,63 @@ abstract class ProducerTest extends TestCase
                 }
 
                 ++$consumedMessages;
+            }
+        );
+
+        self::assertSame(self::MESSAGES_TO_SEND, $consumedMessages);
+    }
+
+    /**
+     *@test
+     *
+     * @runInSeparateProcess
+     */
+    public function consumeProducedMessagesForVerify141()
+    {
+        try{
+            $this->Verify141();
+        }catch (\Exception $e){
+            gc_collect_cycles();
+        }
+        $this->Verify141(true);
+    }
+
+    protected function Verify141($assert = false): void
+    {
+        $this->configureConsumer();
+        ConsumerConfig::getInstance()->setConsumeMode(ConsumerConfig::CONSUME_BEFORE_COMMIT_OFFSET);
+
+        $consumedMessages = 0;
+        $executionEnd     = new \DateTimeImmutable('+1 minute');
+
+        $consumer = new Consumer(
+            new Callback(
+                function () use (&$consumedMessages, $executionEnd): bool {
+                    return $consumedMessages >= self::MESSAGES_TO_SEND || new \DateTimeImmutable() > $executionEnd;
+                }
+            )
+        );
+
+        $consumer->start(
+            function (string $topic, int $partition, array $message) use (&$consumedMessages, $assert): void {
+                if($assert)
+                {
+                    self::assertSame($this->topic, $topic);
+                    self::assertLessThan(3, $partition);
+                    self::assertArrayHasKey('offset', $message);
+                    self::assertArrayHasKey('size', $message);
+                    self::assertArrayHasKey('message', $message);
+                    self::assertArrayHasKey('crc', $message['message']);
+                    self::assertArrayHasKey('magic', $message['message']);
+                    self::assertArrayHasKey('attr', $message['message']);
+                    self::assertArrayHasKey('key', $message['message']);
+                    self::assertArrayHasKey('value', $message['message']);
+                    self::assertContains('msg-', $message['message']['value']);
+
+                    self::assertEquals(1, $message['offset']);
+                }else {
+                    throw new Exception();
+                }
             }
         );
 
