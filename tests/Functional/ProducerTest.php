@@ -119,8 +119,8 @@ abstract class ProducerTest extends TestCase
     {
         try {
             $this->verify141();
-        } catch (\Exception $e){
-            gc_collect_cycles();
+        } catch (\Throwable $e) {
+            \gc_collect_cycles();
         }
 
         $this->verify141(true);
@@ -144,8 +144,8 @@ abstract class ProducerTest extends TestCase
 
         $consumer->start(
             function (string $topic, int $partition, array $message) use (&$consumedMessages, $assert): void {
-                if ($assert)
-                {
+                if ($assert) {
+
                     self::assertSame($this->topic, $topic);
                     self::assertLessThan(3, $partition);
                     self::assertArrayHasKey('offset', $message);
@@ -159,7 +159,8 @@ abstract class ProducerTest extends TestCase
                     self::assertContains('msg-', $message['message']['value']);
 
                     self::assertEquals(1, $message['offset']);
-                }else {
+                } else {
+
                     throw new Exception();
                 }
             }
