@@ -115,17 +115,18 @@ abstract class ProducerTest extends TestCase
      *
      * @runInSeparateProcess
      */
-    public function consumeProducedMessagesForVerify141()
+    public function consumeProducedMessagesForVerify141(): void
     {
-        try{
-            $this->Verify141();
-        }catch (\Exception $e){
+        try {
+            $this->verify141();
+        } catch (\Exception $e){
             gc_collect_cycles();
         }
-        $this->Verify141(true);
+
+        $this->verify141(true);
     }
 
-    protected function Verify141($assert = false): void
+    protected function verify141(bool $assert = false): void
     {
         $this->configureConsumer();
         ConsumerConfig::getInstance()->setConsumeMode(ConsumerConfig::CONSUME_BEFORE_COMMIT_OFFSET);
@@ -143,7 +144,7 @@ abstract class ProducerTest extends TestCase
 
         $consumer->start(
             function (string $topic, int $partition, array $message) use (&$consumedMessages, $assert): void {
-                if($assert)
+                if ($assert)
                 {
                     self::assertSame($this->topic, $topic);
                     self::assertLessThan(3, $partition);
