@@ -143,7 +143,7 @@ abstract class ProducerTest extends TestCase
         );
 
         $consumer->start(
-            function (string $topic, int $partition, array $message) use (&$consumedMessages, $assert): void {
+            function (string $topic, int $partition, array $message) use (&$consumedMessages, $assert, $consumer): void {
                 if ($assert) {
                     self::assertSame($this->topic, $topic);
                     self::assertLessThan(3, $partition);
@@ -156,7 +156,8 @@ abstract class ProducerTest extends TestCase
                     self::assertArrayHasKey('key', $message['message']);
                     self::assertArrayHasKey('value', $message['message']);
                     self::assertContains('msg-', $message['message']['value']);
-                    self::assertEquals(1, $message['offset']);
+                    self::assertEquals(0, $message['offset']);
+                    $consumer->stop();
                 } else {
                     throw new Exception();
                 }
