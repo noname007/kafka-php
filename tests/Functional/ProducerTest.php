@@ -120,7 +120,7 @@ abstract class ProducerTest extends TestCase
         try {
             $this->verify141();
         } catch (\Throwable $e) {
-
+            echo 'throw a exceptions';
         }
 
         $this->verify141(true);
