@@ -120,7 +120,7 @@ abstract class ProducerTest extends TestCase
         try {
             $this->verify141();
         } catch (\Throwable $e) {
-            \gc_collect_cycles();
+
         }
 
         $this->verify141(true);
