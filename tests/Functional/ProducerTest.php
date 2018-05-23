@@ -111,7 +111,7 @@ abstract class ProducerTest extends TestCase
     }
 
     /**
-     *@test
+     * @test
      *
      * @runInSeparateProcess
      */
