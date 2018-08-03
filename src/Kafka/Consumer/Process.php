@@ -466,7 +466,7 @@ class Process
                 'data' => $data,
             );
             $stream = $connect->getSocket();
-            //$this->debug("Get current offset start, params:" . json_encode($params));
+            $this->debug("Get current offset start, params:" . json_encode($params));
             $requestData = \Kafka\Protocol::encode(\Kafka\Protocol::OFFSET_REQUEST, $params);
             $connect->write($requestData);
             $context[] = (int)$stream;
@@ -481,7 +481,7 @@ class Process
     public function succOffset($result, $fd)
     {
         $msg = sprintf('Get current offset sucess, result: %s', json_encode($result));
-        //$this->debug($msg);
+        $this->debug($msg);
 
         $offsets = \Kafka\Consumer\Assignment::getInstance()->getOffsets();
         $lastOffsets = \Kafka\Consumer\Assignment::getInstance()->getLastOffsets();
@@ -532,7 +532,7 @@ class Process
             'group_id' => \Kafka\ConsumerConfig::getInstance()->getGroupId(),
             'data' => $data,
         );
-        //$this->debug("Get current fetch offset start, params:" . json_encode($params));
+        $this->debug("Get current fetch offset start, params:" . json_encode($params));
         $requestData = \Kafka\Protocol::encode(\Kafka\Protocol::OFFSET_FETCH_REQUEST, $params);
         $connect->write($requestData);
     }
