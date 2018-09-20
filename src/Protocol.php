@@ -1,6 +1,22 @@
 <?php
 namespace Kafka;
 
+use Kafka\Protocol\ApiVersions;
+use Kafka\Protocol\CommitOffset;
+use Kafka\Protocol\DescribeGroups;
+use Kafka\Protocol\Fetch;
+use Kafka\Protocol\FetchOffset;
+use Kafka\Protocol\GroupCoordinator;
+use Kafka\Protocol\Heartbeat;
+use Kafka\Protocol\JoinGroup;
+use Kafka\Protocol\LeaveGroup;
+use Kafka\Protocol\ListGroup;
+use Kafka\Protocol\Metadata;
+use Kafka\Protocol\Offset;
+use Kafka\Protocol\Produce;
+use Kafka\Protocol\SaslHandShake;
+use Kafka\Protocol\SyncGroup;
+
 class Protocol
 {
 
@@ -158,30 +174,33 @@ class Protocol
     public static function init($version, $logger = null)
     {
         $class = [
-            \Kafka\Protocol\Protocol::PRODUCE_REQUEST => 'Produce',
-            \Kafka\Protocol\Protocol::FETCH_REQUEST => 'Fetch',
-            \Kafka\Protocol\Protocol::OFFSET_REQUEST => 'Offset',
-            \Kafka\Protocol\Protocol::METADATA_REQUEST => 'Metadata',
-            \Kafka\Protocol\Protocol::OFFSET_COMMIT_REQUEST => 'CommitOffset',
-            \Kafka\Protocol\Protocol::OFFSET_FETCH_REQUEST => 'FetchOffset',
-            \Kafka\Protocol\Protocol::GROUP_COORDINATOR_REQUEST => 'GroupCoordinator',
-            \Kafka\Protocol\Protocol::JOIN_GROUP_REQUEST => 'JoinGroup',
-            \Kafka\Protocol\Protocol::HEART_BEAT_REQUEST => 'Heartbeat',
-            \Kafka\Protocol\Protocol::LEAVE_GROUP_REQUEST => 'LeaveGroup',
-            \Kafka\Protocol\Protocol::SYNC_GROUP_REQUEST => 'SyncGroup',
-            \Kafka\Protocol\Protocol::DESCRIBE_GROUPS_REQUEST => 'DescribeGroups',
-            \Kafka\Protocol\Protocol::LIST_GROUPS_REQUEST => 'ListGroup',
-            \Kafka\Protocol\Protocol::SASL_HAND_SHAKE_REQUEST => 'SaslHandShake',
-            \Kafka\Protocol\Protocol::API_VERSIONS_REQUEST => 'ApiVersions',
+            \Kafka\Protocol\Protocol::PRODUCE_REQUEST => Produce::class,
+            \Kafka\Protocol\Protocol::FETCH_REQUEST => Fetch::class,
+            \Kafka\Protocol\Protocol::OFFSET_REQUEST => Offset::class,
+            \Kafka\Protocol\Protocol::METADATA_REQUEST => Metadata::class,
+            \Kafka\Protocol\Protocol::OFFSET_COMMIT_REQUEST => CommitOffset::class,
+            \Kafka\Protocol\Protocol::OFFSET_FETCH_REQUEST => FetchOffset::class,
+            \Kafka\Protocol\Protocol::GROUP_COORDINATOR_REQUEST => GroupCoordinator::class,
+            \Kafka\Protocol\Protocol::JOIN_GROUP_REQUEST => JoinGroup::class,
+            \Kafka\Protocol\Protocol::HEART_BEAT_REQUEST => Heartbeat::class,
+            \Kafka\Protocol\Protocol::LEAVE_GROUP_REQUEST => LeaveGroup::class,
+            \Kafka\Protocol\Protocol::SYNC_GROUP_REQUEST => SyncGroup::class,
+            \Kafka\Protocol\Protocol::DESCRIBE_GROUPS_REQUEST => DescribeGroups::class,
+            \Kafka\Protocol\Protocol::LIST_GROUPS_REQUEST => ListGroup::class,
+            \Kafka\Protocol\Protocol::SASL_HAND_SHAKE_REQUEST => SaslHandShake::class,
+            \Kafka\Protocol\Protocol::API_VERSIONS_REQUEST => ApiVersions::class,
         ];
 
-        $namespace = '\\Kafka\\Protocol\\';
         foreach ($class as $key => $className) {
-            $class               = $namespace . $className;
-            self::$objects[$key] = new $class($version);
+            /**
+             * @var $obj Protocol\Protocol
+             */
+            $obj  = new $className($version);
             if ($logger) {
-                self::$objects[$key]->setLogger($logger);
+               $obj->setLogger($logger);
             }
+
+            self::$objects[$key] = $obj;
         }
     }
 
