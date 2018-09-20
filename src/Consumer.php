@@ -1,13 +1,11 @@
 <?php
 namespace Kafka;
 
-use Kafka\Loop;
 use Kafka\Consumer\Process;
 use Kafka\Consumer\StopStrategy;
 
 class Consumer
 {
-    use Psr\Log\LoggerAwareTrait;
     use \Kafka\LoggerTrait;
 
     /**
