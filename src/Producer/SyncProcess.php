@@ -26,7 +26,6 @@ class SyncProcess implements LoggerAwareInterface
     {
         $this->setConfig($config);
 
-        $config = \Kafka\lib\ProducerConfig::getInstance();
         \Kafka\Protocol::init($config->getBrokerVersion(), $this->logger);
 
         $broker = new Broker();
