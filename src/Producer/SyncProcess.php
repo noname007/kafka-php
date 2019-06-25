@@ -44,7 +44,7 @@ class SyncProcess implements LoggerAwareInterface
     public function send($data)
     {
         $broker      = $this->getBroker();
-        $config = $this->getConfig();
+        $config      = $this->getConfig();
         $requiredAck = $config->getRequiredAck();
         $timeout     = $config->getTimeout();
 
@@ -60,7 +60,7 @@ class SyncProcess implements LoggerAwareInterface
                 return false;
             }
 
-            $params      = [
+            $params = [
                 'required_ack' => $requiredAck,
                 'timeout' => $timeout,
                 'data' => $topicList,
@@ -69,11 +69,11 @@ class SyncProcess implements LoggerAwareInterface
             $requestData = \Kafka\Protocol::encode(\Kafka\Protocol::PRODUCE_REQUEST, $params);
             $connect->write($requestData);
             if ($requiredAck != 0) { // If it is 0 the server will not send any response
-                $dataLen       = \Kafka\Protocol\Protocol::unpack(\Kafka\Protocol\Protocol::BIT_B32, $connect->read(4));
-                $data          = $connect->read($dataLen);
-//                $correlationId = \Kafka\Protocol\Protocol::unpack(\Kafka\Protocol\Protocol::BIT_B32, substr($data, 0, 4));
-                $ret           = \Kafka\Protocol::decode(\Kafka\Protocol::PRODUCE_REQUEST, substr($data, 4));
-                $result[]      = $ret;
+                $dataLen = \Kafka\Protocol\Protocol::unpack(\Kafka\Protocol\Protocol::BIT_B32, $connect->read(4));
+                $data    = $connect->read($dataLen);
+                //$correlationId = \Kafka\Protocol\Protocol::unpack(\Kafka\Protocol\Protocol::BIT_B32, substr($data, 0, 4));
+                $ret      = \Kafka\Protocol::decode(\Kafka\Protocol::PRODUCE_REQUEST, substr($data, 4));
+                $result[] = $ret;
             }
         }
         return $result;
@@ -156,7 +156,7 @@ class SyncProcess implements LoggerAwareInterface
             $topicMeta = $topicInfos[$value['topic']];
 
             if (! isset($value['partId']) || ! isset($topicMeta[$value['partId']])) {
-                $partNums  = array_keys($topicMeta);
+                $partNums = array_keys($topicMeta);
                 shuffle($partNums);
                 $partId = $partNums[0];
             } else {

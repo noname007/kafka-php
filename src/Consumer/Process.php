@@ -569,7 +569,7 @@ class Process
                 }
 
                 $assign->setConsumerOffset($topic['topicName'], $part['partition'], $offset);
-				$assign->setCommitOffset($topic['topicName'], $part['partition'], $offset);
+                $assign->setCommitOffset($topic['topicName'], $part['partition'], $offset);
             }
         }
         $this->state->succRun(\Kafka\Consumer\State::REQUEST_FETCH, $fd);

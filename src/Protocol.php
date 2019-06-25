@@ -195,9 +195,9 @@ class Protocol
             /**
              * @var $obj Protocol\Protocol
              */
-            $obj  = new $className($version);
+            $obj = new $className($version);
             if ($logger) {
-               $obj->setLogger($logger);
+                $obj->setLogger($logger);
             }
 
             self::$objects[$key] = $obj;

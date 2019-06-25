@@ -1,7 +1,6 @@
 <?php
 namespace Kafka\lib;
 
-
 /**
  * Class Config
  *

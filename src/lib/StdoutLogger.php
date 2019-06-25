@@ -8,7 +8,6 @@
 
 namespace Kafka\lib;
 
-
 use Psr\Log\AbstractLogger;
 
 class StdoutLogger extends AbstractLogger
@@ -23,7 +22,7 @@ class StdoutLogger extends AbstractLogger
      *
      * @return void
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $context_msg = $context ? json_encode($context, JSON_UNESCAPED_UNICODE):'';
         echo date('[Y-m-d H:i:s]'), "[$level]$message", $context_msg, PHP_EOL;
