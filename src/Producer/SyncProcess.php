@@ -30,7 +30,7 @@ class SyncProcess implements LoggerAwareInterface
 
         Protocol::init($config->getBrokerVersion(), $this->logger);
 
-        $broker = new Broker();
+        $broker = Broker::getInstance(__CLASS__);
         $broker->setConfig($config);
 
         $this->setBroker($broker);
