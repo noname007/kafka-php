@@ -4,6 +4,7 @@ namespace Kafka\Producer;
 use Kafka\Broker;
 use Kafka\LoggerTrait;
 use Kafka\lib\ProducerConfig;
+use Kafka\Protocol;
 use Psr\Log\LoggerAwareInterface;
 
 class SyncProcess implements LoggerAwareInterface
@@ -22,11 +23,12 @@ class SyncProcess implements LoggerAwareInterface
      */
     private $config;
 
-    public function __construct(ProducerConfig $config = null)
+    public function __construct()
     {
+        $config = ProducerConfig::getInstance();
         $this->setConfig($config);
 
-        \Kafka\Protocol::init($config->getBrokerVersion(), $this->logger);
+        Protocol::init($config->getBrokerVersion(), $this->logger);
 
         $broker = new Broker();
         $broker->setConfig($config);
