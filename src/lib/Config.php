@@ -6,6 +6,11 @@ namespace Kafka\lib;
  *
  * @method getBrokerVersion
  * @method getMetadataBrokerList
+ * @method getMetadataRefreshIntervalMs
+ * @method getSaslMechanism
+ * @method getSaslUsername
+ * @method getSaslPassword
+ * @method setSslEnable
  *
  * @package Kafka
  */

@@ -1,6 +1,7 @@
 <?php
 namespace Kafka\Producer;
 
+use Kafka\lib\ProducerConfig;
 use Kafka\Loop;
 
 class State
