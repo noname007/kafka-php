@@ -88,11 +88,19 @@ class ConsumerConfig extends Config
     protected $runtime_options         = [
         'consume_mode' => self::CONSUME_AFTER_COMMIT_OFFSET
     ];
+
+    const CONSUME_MODE = [
+        self::CONSUME_AFTER_COMMIT_OFFSET,
+        self::CONSUME_BEFORE_COMMIT_OFFSET,
+    ];
     const CONSUME_AFTER_COMMIT_OFFSET  = 1;
     const CONSUME_BEFORE_COMMIT_OFFSET = 2;
 
-    public function setConsumeMode($mode)
+    public function setConsumeMode(int $mode)
     {
+        if(!in_array($mode, self::CONSUME_MODE)){
+            throw new \Kafka\Exception\Config("Consume Mode config wrong, now value: $mode");
+        }
         $this->runtime_options['consume_mode'] = $mode;
     }
 
